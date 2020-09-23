@@ -1,37 +1,37 @@
 const db = require("../data/db-config.js");
 
 function find() {
-    return db("users");
+    return db("schemes");
 }
 
 function findById() {
-    return db("users").where({ id }).first();
+    return db("schemes").where({ id }).first();
 }
 
-function add(user) {
-    return db("users").insert(user, id);
+function add(scheme) {
+    return db("schemes").insert(scheme, id);
 }
 
-function findPosts(id) {
-    return db("posts as p")
-        .join("users as u")
-        .select("p.id", "u.username", "p.contents")
-        .where({ id });
+function findSteps(id) {
+    return db("steps as s")
+        .where({ id })
+        .join("schemes as sc")
+        .orderBy("s.step_number");
 }
 
 function update(id, changes) {
-    return db("users").where({ id }).update(changes);
+    return db("schmes").where({ id }).update(changes);
 }
 
 function remove(id) {
-    return db("users").where({ id }).del();
+    return db("schemes").where({ id }).del();
 }
 
 module.exports = {
     find,
     add,
     findById,
-    findPosts,
+    findSteps,
     update,
     remove,
 };
