@@ -1,37 +1,49 @@
+const { where } = require("../data/db-config.js");
 const db = require("../data/db-config.js");
 
 function find() {
     return db("schemes");
 }
 
-function findById() {
+function findById(id) {
     return db("schemes").where({ id }).first();
 }
 
+function findSteps(scheme_id) {
+    return db("steps")
+        .where({ scheme_id })
+        .join("schemes", "steps.scheme_id", "schemes.id")
+        .select(
+            "steps.id",
+            "schemes.scheme_name",
+            "steps.step_number",
+            "steps.instructions"
+        )
+        .orderBy("steps.step_number");
+}
+
 function add(scheme) {
-    return db("schemes").insert(scheme, id);
+    return db("schemes").insert(scheme);
 }
 
-function findSteps(id) {
-    return db("steps as s")
-        .where({ id })
-        .join("schemes as sc")
-        .orderBy("s.step_number");
-}
-
-function update(id, changes) {
-    return db("schmes").where({ id }).update(changes);
+function update(changes, id) {
+    return db("schemes").where({ id }).update(changes);
 }
 
 function remove(id) {
     return db("schemes").where({ id }).del();
 }
 
+function addStep(step, scheme_id) {
+    return db("steps").insert({ ...step, scheme_id });
+}
+
 module.exports = {
     find,
-    add,
     findById,
     findSteps,
+    add,
     update,
     remove,
+    addStep,
 };
